@@ -116,6 +116,8 @@
         this.firstName = firstname || '';
         this.lastName = lastname || '';
         this.language = language || 'en';
+
+        this.validate();
     };
 
     // borrowed from jQuery so we don't have to use 'new'
