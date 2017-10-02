@@ -1,38 +1,49 @@
 (function(global, $) {
-
+    // 'new' an object
     var Greetr = function(firstname, lastname, language) {
-        return new Greetr.init(firstname, lastname, language); //use f() constructor to
-        //generate obj, so user dont have to use 'new' each time to generate obj        
+
+        //use f() constructor to
+        //generate obj, so user dont have to use 'new' each time to generate obj
+        return new Greetr.init(firstname, lastname, language);  
     };
 
+    // these vars hidden within IIFE and arnt directly accessible
     var supportedLangs = ['en', 'ua'];
 
+    // informal greetings
     var greetings = {
         en: 'Hello',
         ua: 'Привіт'
     };
 
+    // formal greetings
     var formalGreetings = {
         en: 'Greetings',
         ua: 'Вітаємо'
     };
 
+    // logger message
     var logMessages = {
         en: 'Logged in',
         ua: 'Вхід здійснено'
     };
 
+    // prototype holds methods (to save memory space, instead of doing so inside Greetr)
     Greetr.prototype = {
+
+        // 'this' refers to calling object at execution time
         fullname: function() {
             return this.firstName + ' ' + this.lastName;
         },
 
-        validate: function() { //check if lang is in supportedLangs
+        validate: function() { 
+        // check if lang is in supportedLangs
             if (supportedLangs.indexOf(this.language) === -1) {
                 throw 'Language not supported';
             }
         },
 
+        // retrieve message from Obj by reffering to props using [] syntax
         greeting: function() {
             return greetings[this.language] + ' ' + this.firstName + '!';
         },
@@ -43,7 +54,7 @@
 
         greet: function(formal) {
             var msg;
-            //if undefined or null it'll be coerced to 'false'
+            // if undefined or null it'll be coerced to 'false'
             if (formal) {
                 msg = this.formalGreeting();
             } else {
@@ -52,8 +63,8 @@
             if (console) {
                 console.log(msg);
             }
-            //'this' refers to the calling object at execution time
-            //makes the method chainable;
+            // 'this' refers to the calling object at execution time
+            // makes the method chainable;
             return this;
         },
 
@@ -61,12 +72,17 @@
             if (console) {
                 console.log(logMessages[this.language] + ': ' + this.fullname());
             }
+            // make chainable
             return this;
         },
 
         setLang: function(lang) {
-            this.language = lang; //update my obj and set new lang
+
+            //update my obj and set new lang
+            this.language = lang;
+            // validate
             this.validate();
+            // make chainable
             return this;
         },
 
@@ -79,6 +95,7 @@
                 throw 'Missing jQuery selector';
             }
 
+            // determine the message
             var msg;
             if (formal) {
                 msg = this.formalGreeting();
@@ -86,21 +103,25 @@
                 msg = this.greeting();
             }
 
+            // insert message in the chosen place in DOM
             $(selector).html(msg);
+            // make chainable
             return this;
         }
 
     };
 
+    // the actual Obj is created here, letting us to create 'new' Obj without callin 'new'
     Greetr.init = function(firstname, lastname, language) {
         this.firstName = firstname || '';
         this.lastName = lastname || '';
         this.language = language || 'en';
     };
 
-    Greetr.init.prototype = Greetr.prototype; //to shorten name
-
-    global.Greetr = global.G$ = Greetr; //to shorten Greetr() to G$()
+    // borrowed from jQuery so we don't have to use 'new'
+    Greetr.init.prototype = Greetr.prototype;
+    //to shorten Greetr() to G$()
+    global.Greetr = global.G$ = Greetr; 
 
 
 }(window, jQuery));
